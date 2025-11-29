@@ -4,11 +4,16 @@ public class Depth_First_Traversal<E> implements GraphInterface<E> {
     private E[] labels;     // labels[i] = label for vertex i
 
     public Depth_First_Traversal(int n) {
-        edges = new boolean[n][n];  //all values false by default
-        labels = (E[]) new Object[n]; //all values null by default
+        edges = new boolean[n][n];  // all values false by default
+        labels = (E[]) new Object[n]; // all values null by default
     }
 
-    //gets the label of a vertex
+    // set the label of a vertex
+    public void setLabel(int vertex, E newLabel) {
+        labels[vertex] = newLabel;
+    }
+    
+    // gets the label of a vertex
     public E getLabel(int vertex){
         return labels[vertex];
     }
@@ -23,6 +28,16 @@ public class Depth_First_Traversal<E> implements GraphInterface<E> {
         edges[source][target] = true;
     }
 
+    // remove an edge
+    public void removeEdge(int source, int target) {
+        edges[source][target] = false;
+    }
+
+    // returns the number of vertices in the graph
+    public int getSize() {
+        return labels.length;
+    }
+    
     // get a list of neighbors of a given vertex
     public int[] getNeighbors(int vertex){
         int i;
@@ -34,30 +49,13 @@ public class Depth_First_Traversal<E> implements GraphInterface<E> {
                 count++;
             }
         }
-
         answer = new int[count];
         count = 0;
         for (i=0; i < labels.length; i++) {
             if (edges[vertex][i])
                 answer[count++] = i;
         }
-        
         return answer;
-    }
-
-    // remove an edge
-    public void removeEdge(int source, int target) {
-        edges[source][target] = false;
-    }
-
-    // change the label of a vertex
-    public void setLabel(int vertex, E newLabel) {
-        labels[vertex] = newLabel;
-    }
-
-    // returns the number of vertices in the graph
-    public int getSize() {
-        return labels.length;
     }
 
     public static void main(String[] args){
@@ -72,5 +70,5 @@ public class Depth_First_Traversal<E> implements GraphInterface<E> {
             System.out.println(depthGraph.getLabel(2));
             System.out.println(depthGraph.getLabel(3));
         }
-
+    
 }

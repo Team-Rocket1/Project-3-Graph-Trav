@@ -59,7 +59,7 @@ public class Depth_First_Traversal<E> implements GraphInterface<E> {
     }
 
     public static void main(String[] args){
-            Depth_First_Traversal<String> depthGraph = new Graph<>(5);
+            Depth_First_Traversal<String> depthGraph = new Depth_First_Traversal<>(5);
             depthGraph.setLabel(0, "A");
             depthGraph.setLabel(1, "B");
             depthGraph.setLabel(2, "C");

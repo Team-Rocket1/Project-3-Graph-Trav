@@ -12,5 +12,27 @@ public class Breadth_First_Traversal {
             labels = (E[]) new Object[n];   //Creates an array, (generic type "E") to hold labels of vertices.
 
         }
-    }    
+    }
+    
+    /*Graph Class Methods*/
+    public int size() {     //Returns the number of vertices in the graph.  
+        return labels.length;
+        }
+
+    public void setLabel(int vertex, E newLabel) {      //Sets the label of a vertex to newLabel.
+        labels[vertex] = newLabel;
+        }
+
+    public E getLabel(int vertex) {      //Returns the label of a vertex.
+        return labels[vertex];
+        }
+
+    public void addEdge(int source, int target) {   //Adds an edge from source vertex to target vertex.
+        edges[source][target] = true;
+        }
+
+    public boolean isEdge(int source, int target) {     //Returns true if there is an edge from source vertex to target vertex; otherwise, returns false.
+        return edges[source][target];
+        }
 }
+

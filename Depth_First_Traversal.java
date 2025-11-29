@@ -40,20 +40,19 @@ public class Depth_First_Traversal<E> implements GraphInterface<E> {
     
     // get a list of neighbors of a given vertex
     public int[] getNeighbors(int vertex){
-        int i;
         int count = 0;
-        int[] answer;
-
-        for (i=0; i < labels.length; i++) {
+        
+        for (int i = 0; i < labels.length; i++) {
             if (edges[vertex][i]){
                 count++;
             }
         }
-        answer = new int[count];
+        int[] answer = new int[count];
         count = 0;
-        for (i=0; i < labels.length; i++) {
-            if (edges[vertex][i])
+        for (int i = 0; i < labels.length; i++) {
+            if (edges[vertex][i]) {
                 answer[count++] = i;
+            }
         }
         return answer;
     }

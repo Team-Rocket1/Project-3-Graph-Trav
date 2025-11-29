@@ -1,9 +1,9 @@
 
-public class Graph<E> implements GraphInterface<E> {
+public class Depth_First_Traversal<E> implements GraphInterface<E> {
     private boolean[][] edges; // edges[i][j] = true if there is a vertex i to j
     private E[] labels;     // labels[i] = label for vertex i
 
-    public Graph(int n) {
+    public Depth_First_Traversal(int n) {
         edges = new boolean[n][n];  //all values false by default
         labels = (E[]) new Object[n]; //all values null by default
     }
@@ -61,7 +61,7 @@ public class Graph<E> implements GraphInterface<E> {
     }
 
     public static void main(String[] args){
-            Graph<String> depthGraph = new Graph<>(5);
+            Depth_First_Traversal<String> depthGraph = new Graph<>(5);
             depthGraph.setLabel(0, "A");
             depthGraph.setLabel(1, "B");
             depthGraph.setLabel(2, "C");

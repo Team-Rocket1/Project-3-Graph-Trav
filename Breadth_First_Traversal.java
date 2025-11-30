@@ -12,7 +12,6 @@ public class Breadth_First_Traversal {
             labels = (E[]) new Object[n];       //Creates an array, (generic type "E") to hold labels of vertices.
 
         }
-    }    
 
     /*Graph Class Methods*/
     public int size() {                                 //Returns the number of vertices in the graph.  
@@ -34,6 +33,7 @@ public class Breadth_First_Traversal {
     public boolean isEdge(int source, int target) {     //Returns true if there is an edge from source vertex to target vertex; otherwise, returns false.
         return edges[source][target];
         }
+        
 
     /*
     * Returns an array of integers representing the neighboring vertices of the given vertex. 
@@ -94,5 +94,54 @@ public class Breadth_First_Traversal {
             }
         }
             return traversalOrder;
+    }
+}
+    /*Building Graph*/
+    public static void main(String[] args) {
+        Graph<Character> g = new Graph<>(9);    //Create a graph with 9 vertices.
+
+        char[] labels = {'A','B','C','D','E','F','G','H','I'};  //Labels for the vertices (characters A to I represent the vertices 0 to 8).
+        for (int i = 0; i < labels.length; i++) {
+            g.setLabel(i, labels[i]);
+        }
+
+    /*
+    Map to associate each label with its corresponding vertex index. 
+    Allows easy edge addition using letters instead of numbers. 
+    */
+        Map<Character,Integer> indexOf = new HashMap<>();
+        for (int i = 0; i < labels.length; i++) {
+            indexOf.put(labels[i], i);
+        }
+
+        addEdge(g, indexOf, 'A', 'B');
+        addEdge(g, indexOf, 'A', 'D');
+        addEdge(g, indexOf, 'A', 'E');
+        addEdge(g, indexOf, 'B', 'E');
+        addEdge(g, indexOf, 'D', 'G');
+        addEdge(g, indexOf, 'E', 'F');
+        addEdge(g, indexOf, 'E', 'H');
+        addEdge(g, indexOf, 'G', 'H');
+        addEdge(g, indexOf, 'F', 'C');
+        addEdge(g, indexOf, 'F', 'H');
+        addEdge(g, indexOf, 'H', 'I');
+        addEdge(g, indexOf, 'C', 'B');
+        addEdge(g, indexOf, 'I', 'F');
+
+    /*Performing BreadthFirstTraversal*/
+        int origin = indexOf.get('A');
+        List<Character> order = g.breadthFirstTraversal(origin);
+
+        System.out.print("Breadth-first traversal starting at A: ");
+        for (Character c : order) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
+    }
+
+    private static void addEdge(Graph<Character> g,
+        Map<Character,Integer> indexOf,
+        char from, char to) {
+            g.addEdge(indexOf.get(from), indexOf.get(to));
     }
 }

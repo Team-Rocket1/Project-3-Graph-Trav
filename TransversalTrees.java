@@ -1,17 +1,40 @@
 import java.util.*;
+/**
+ * Task 3 - Generates BFS and DFS traversal trees based on parent arrays
+ * returned from Task 1 (BFS) and Task 2 (DFS). 
+ *
+ * This program:
+ * <ul>
+ *   <li>Builds the given directed graph (A–I)</li>
+ *   <li>Constructs BFS and DFS trees from traversal parent arrays</li>
+ *   <li>Traverses the generated trees using queue (BFS) and stack (DFS)</li>
+ *   <li>Outputs the tree structure and the visitation order of vertices</li>
+ * </ul>
+ */
+
 
 public class TransversalTrees {
+    /**
+     * Entry method for Task 3 — constructs graph, creates BFS + DFS trees,
+     * and prints traversal sequences.
+     *
+     * @param args no command line arguments used
+     */
     public static void main(String[] args) {
         Graph<String> g = new Graph<>();
         int start = 0; // Vertex at "A"
 
-        // Adding vertices from initial graph
+        /**
+         * STEP 1 — Load Graph Vertices
+         */
         String[] vertices = {"A", "B", "C", "D","E","F","G","H","I"};
         for (int i = 0; i < vertices.length; i++) {
             g.setVertex(i, vertices[i]);
         } 
 
-        //Adding edges from initial graph
+        /**
+         * STEP 2 — Insert Edges from Assignment Specification
+         */
         int [][] edges = {
             {0,1}, // A-B
             {0,3}, //A-D
@@ -32,72 +55,137 @@ public class TransversalTrees {
             g.addEdge(edge[0], edge[1]);
         }
 
-        // Get BFS and DFS results
-        int[] bfsResult = g.bfs(start);
-        int[] dfsResult = g.dfs(start);
+        /**
+         * STEP 3 — Retrieve parent relationship arrays from BFS/DFS 
+         * (generated in Task 1 + Task 2).
+         */
+        int[] bfsParents = g.bfs(start);
+        int[] dfsParents = g.dfs(start);
  
-        // DFS Tree //
-        // Creating tree graph structure using BFS parent array
-        Map<Integer, List<Integer>> bfsTree = TreeFromParents(bfsResult);
-        System.out.println("BFS Tree: " + bfsTree);
+        // ----------------------  BFS TREE  ---------------------- //
+
+        /**
+         * Build BFS Tree from parent array.
+         */
+        Map<Integer, List<Integer>> bfsTree = treeFromParents(bfsParents);
+        System.out.println("BFS Tree (parent -> children): " );
         printTree(bfsTree, g);
         System.out.println();
 
-        //Traverse BFS Tree following BFS order
+        /**
+         * Traverse BFS tree using queue so tree traversal
+         * matches the real BFS visit order.
+         */
         List<Integer> bfsTreeOrder = breadthFirstTraversalOnTree(bfsTree, start);
-        System.out.println("BFS Traversal on Tree: " + bfsTreeOrder);
+        System.out.println("BFS Traversal on Tree (labels): " );
         printOrder(bfsTreeOrder, g);
         System.out.println();
         System.out.println("--------------------------------------------------");
 
-        //BFS Tree //
-        //Creating tree graph structure using DFS parent array
-        Map<Integer, List<Integer>> dfsTree = TreeFromParents(dfsResult);
-        System.out.println("DFS Tree: " + dfsTree);
+       // ----------------------  DFS TREE  ---------------------- //
+
+        /**
+         * Build DFS Tree from parent array.
+         */
+        Map<Integer, List<Integer>> dfsTree = treeFromParents(dfsParents);
+        System.out.println("DFS Tree (parent -> children): " );
         printTree(dfsTree, g);
         System.out.println();
 
-        //Traverse DFS Tree following DFS order
+        /**
+         * Traverse DFS tree using stack (iterative)
+         * so traversal matches real DFS behavior.
+         */
         List<Integer> dfsTreeOrder = depthFirstTraversalOnTree(dfsTree, start);
-        System.out.println("DFS Traversal on Tree: " + dfsTreeOrder);
+        System.out.println("DFS Traversal on Tree (labels): " );
         printOrder(dfsTreeOrder, g);
         System.out.println();
         System.out.println("--------------------------------------------------");
 
+        /** Print structure of original graph and tree outputs */
         displayGraphStructure(g);
         displayTraversalResults(g, start, vertices);
     }
+
+    // =============================================================
+    //  SUPPORTING METHODS WITH JAVADOC
+    // =============================================================
     
+    /**
+     * Displays adjacency structure of graph.
+     *
+     * @param graph full graph containing directed edges
+     */
     private static void displayGraphStructure(Graph<String> graph) {
         System.out.println("Graph:");
         graph.printGraph();
     }
     
+    /**
+     * Prints traversal trees (generated in Task 3)
+     *
+     * @param graph original graph provided
+     * @param startVertex starting index for traversal
+     * @param vertices label array for output printing
+     */
     private static void displayTraversalResults(Graph<String> graph, int startVertex, String[] vertices) {
         System.out.println("\nTraversal Trees starting from vertex " + vertices[startVertex] + ":");
         graph.printTransversalTrees(startVertex);
     }
 
-    private static Map<Integer, List<Integer>> TreeFromParents(int[] parents) {
-        Map<Integer, List<Integer>> tree = new HashMap<>();
-        for (int i = 0; i < parents.length; i++) {
-            if (parents[i] != -1) {
-                tree.computeIfAbsent(parents[i], k -> new ArrayList<>()).add(i);
+    /**
+     * Creates a tree structure from BFS/DFS parent array
+     * Each index stores parent of vertex i, where -1 = root.
+     *
+     * @param parents parent relationship array
+     * @return LinkedHashMap mapping parent -> children
+     */
+    private static Map<Integer, List<Integer>> treeFromParents(int[] parents) {
+        Map<Integer, List<Integer>> tree = new LinkedHashMap<>();
+        int n = parents.length;
+
+        //Ensure all vertices are initialized in the tree
+        for (int i = 0; i < n; i++) {
+            tree.put(i, new ArrayList<>()); // Initialize each vertex in the tree
+        }
+        //Fills the tree structure based on parent-child relationships
+        for (int i = 0; i < n; i++) {
+            if (parents[i] != -1) { // Skip root node
+                tree.get(parents[i]).add(i); // Add child to parent's list
             }
         }
         return tree;
     }
 
+    /**
+     * Prints parents and children of generated traversal tree.
+     *
+     * @param tree BFS or DFS tree as adjacency mapping
+     * @param g    Graph used to convert index → vertex label
+     */
     private static void printTree(Map<Integer, List<Integer>> tree, Graph<String> g) {
         for (Map.Entry<Integer, List<Integer>> entry : tree.entrySet()) {
-            System.out.print(g.getVertex(entry.getKey()) + " -> ");
-            for (int child : entry.getValue()) {
-                System.out.print(g.getVertex(child) + " ");
+            int parent = entry.getKey();
+            System.out.print(g.getVertex(parent) + " -> ");
+
+            List<Integer> children = entry.getValue();
+            if (children.isEmpty()) {
+                System.out.println("[]");
+            } else {
+                for (int child : children) {
+                    System.out.print(g.getVertex(child) + " ");
+                }
             }
             System.out.println();
         }
     }
 
+    /**
+     * Prints vertices in label format (A-I)
+     *
+     * @param order list of node indices visited
+     * @param g     reference graph for label lookup
+     */
     private static void printOrder(List<Integer> order, Graph<String> g) {
         for (int vertex : order) {
             System.out.print(g.getVertex(vertex) + " ");
@@ -105,27 +193,81 @@ public class TransversalTrees {
         System.out.println();
     }
 
+    /**
+     * BFS traversal on tree (NOT original graph)
+     * Uses queue to match real BFS exploration.
+     *
+     * @param tree BFS tree as adjacency mapping
+     * @param start starting root node index
+     * @return BFS visitation order
+     */
     private static List<Integer> breadthFirstTraversalOnTree(Map<Integer, List<Integer>> tree, int start) {
         List<Integer> result = new ArrayList<>();
         Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[tree.size()];
+
         queue.offer(start);
-        
+        visited[start] = true;
+
         while (!queue.isEmpty()) {
             int current = queue.poll();
             result.add(current);
-            if (tree.containsKey(current)) {
-                queue.addAll(tree.get(current));
+
+            List<Integer> children = tree.get(current);
+            if (children != null) {
+                for (int child : children) {
+                    if (!visited[child]) {
+                        queue.offer(child);
+                        visited[child] = true;
+                    }
+                }
             }
         }
         return result;
     }
 
+    /**
+     * Iterative DFS Traversal using a stack-based approach
+     *
+     * @param tree DFS tree
+     * @param start root node
+     * @return ordered DFS visitation list
+     */
     private static List<Integer> depthFirstTraversalOnTree(Map<Integer, List<Integer>> tree, int start) {
         List<Integer> result = new ArrayList<>();
-        dfsHelper(tree, start, result);
+        boolean[] visited = new boolean[tree.size()];
+        Stack<Integer> stack = new Stack<>();
+
+        stack.push(start);
+
+        while (!stack.isEmpty()) {
+            int current = stack.pop();
+            
+            if (!visited[current]) {
+                result.add(current);
+                visited[current] = true;
+
+                List<Integer> children = tree.get(current);
+                if (children != null) {
+                    // Push children in reverse order to maintain left-to-right traversal
+                    for (int i = children.size() - 1; i >= 0; i--) {
+                        int child = children.get(i);
+                        if (!visited[child]) {
+                            stack.push(child);
+                        }
+                    }
+                }
+            }
+        }
         return result;
     }
 
+    /**
+     * Recursive helper for DFS tree traversal
+     * @param tree DFS tree structure
+     * @param vertex current vertex being visited
+     * @param result accumulating list of visited vertices
+     */
     private static void dfsHelper(Map<Integer, List<Integer>> tree, int vertex, List<Integer> result) {
         result.add(vertex);
         if (tree.containsKey(vertex)) {

@@ -47,7 +47,21 @@ public class Depth_First_Traversal {
         for (int i = 0; i < labels.length; i++) {
             indexOf.put(labels[i], i);
         }
-        
+
+        // add edges
+        addEdge(depthGraph, indexOf, 'A', 'B');
+        addEdge(depthGraph, indexOf, 'A', 'D');
+        addEdge(depthGraph, indexOf, 'A', 'E');
+        addEdge(depthGraph, indexOf, 'B', 'E');
+        addEdge(depthGraph, indexOf, 'D', 'G');
+        addEdge(depthGraph, indexOf, 'E', 'F');
+        addEdge(depthGraph, indexOf, 'E', 'H');
+        addEdge(depthGraph, indexOf, 'G', 'H');
+        addEdge(depthGraph, indexOf, 'F', 'C');
+        addEdge(depthGraph, indexOf, 'F', 'H');
+        addEdge(depthGraph, indexOf, 'H', 'I');
+        addEdge(depthGraph, indexOf, 'C', 'B');
+        addEdge(depthGraph, indexOf, 'I', 'F');
     }
     
 }

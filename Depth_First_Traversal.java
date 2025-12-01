@@ -34,7 +34,14 @@ public class Depth_First_Traversal {
     }
 
     public static void main(String[] args){
-            
+        Graph<Character> depthGraph = new Graph<>(9);
+        char[] labels = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' };
+        
+        // set labels
+        for (int i = 0; i < labels.length; i++) {
+            g.setLabel(i, labels[i]);
         }
+        
+    }
     
 }

@@ -59,6 +59,13 @@ public class Driver {
 
         System.out.print("Breadth-first traversal starting at A: ");
         printQueue(bfsOrder);  // expected order: A B D E G F H C I
+
+         /*Task 2: iterative depth-first traversal starting at A*/
+        QueueInterface<Character> dfsOrder =
+                graph.getDepthFirstTraversal('A');
+
+        System.out.print("Depth-first traversal starting at A: ");
+        printQueue(dfsOrder);  // expected order: A E H I F C B
     }
 
     /**
@@ -75,3 +82,4 @@ public class Driver {
         System.out.println();
     }
 }
+

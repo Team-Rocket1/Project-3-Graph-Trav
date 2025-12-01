@@ -33,6 +33,34 @@ public class Depth_First_Traversal {
         return edges.get(vertex);
     }
 
+    public List<E> depthFirstTraversal(int origin) {
+        boolean[] visited = new boolean[getSize()];
+        Stack<Integer> stack = new Stack<>();
+        List<E> order = new ArrayList,>();
+
+        stack.push(origin);
+
+        while (!stack.isEmpty()) {
+            int v = stack.pop();
+
+            if (!visited[v]) {
+                visited[v] = true;
+                order.add(getLabel(v));
+
+                // push neighbors in reverse order for natural traversal
+                List<Integer> nbrs = getNeighbors(v);
+                for (int i = nbrs.size() - 1; i >= 0; i--) {
+                    int n = nbrs.get(i);
+                    if (!visited[n]) {
+                        stack.push(n);
+                    }
+                }
+            }
+
+            return order;
+        }
+    }
+
     public static void main(String[] args){
         Graph<Character> depthGraph = new Graph<>(9);
         char[] labels = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' };

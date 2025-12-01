@@ -3,9 +3,14 @@ public class Depth_First_Traversal {
     private List<list<Integer>> edges;
     private E[] labels;
 
-    public Depth_First_Traversal(int n) {
+    @SuppressWarnings("unchecked")
+    public Graph(int n) {
         edges = new ArrayList<>(n);
         labels = (E[]) new Object[n];
+
+        for (int i = 0; i < n; i++) {
+            edges.add(new ArrayList<>());
+        }
     }
 
     // set the label of a vertex
@@ -92,7 +97,7 @@ public class Depth_First_Traversal {
         addEdge(depthGraph, indexOf, 'I', 'F');
 
         int origin = indexOf.get('A');
-        List<Character> order = g.depthFirstTraversal(origin);
+        List<Character> order = depthgraph.depthFirstTraversal(origin);
 
         System.out.print("Depth-first traversal starting at A: ");
         for (char c : order) {

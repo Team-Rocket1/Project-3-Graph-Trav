@@ -41,6 +41,12 @@ public class Depth_First_Traversal {
         for (int i = 0; i < labels.length; i++) {
             g.setLabel(i, labels[i]);
         }
+
+        // create char to index map
+        Map<Character, Integer> indexOf = new HashMap<>();
+        for (int i = 0; i < labels.length; i++) {
+            indexOf.put(labels[i], i);
+        }
         
     }
     

@@ -90,6 +90,14 @@ public class Depth_First_Traversal {
         addEdge(depthGraph, indexOf, 'H', 'I');
         addEdge(depthGraph, indexOf, 'C', 'B');
         addEdge(depthGraph, indexOf, 'I', 'F');
+
+        int origin = indexOf.get('A');
+        List<Character> order = g.depthFirstTraversal(origin);
+
+        System.out.print("Depth-first traversal starting at A: ");
+        for (char c : order) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
     }
-    
 }

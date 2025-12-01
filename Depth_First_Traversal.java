@@ -44,7 +44,7 @@ public class Depth_First_Traversal {
         public List<E> depthFirstTraversal(int origin) {
             boolean[] visited = new boolean[getSize()];
             Stack<Integer> stack = new Stack<>();
-            List<E> order = new ArrayList,>();
+            List<E> order = new ArrayList<>();
     
             stack.push(origin);
     
@@ -71,7 +71,7 @@ public class Depth_First_Traversal {
     }
 
     public static void addEdge(Graph<Character> depthGraph, Map<Character,Integer> indexOf, char source, char target) {
-        depthGraph.addEdge(indexOf.get(from), indexOf.get(to));
+        depthGraph.addEdge(indexOf.get(source), indexOf.get(target));
     }
 
     public static void main(String[] args){
@@ -80,7 +80,7 @@ public class Depth_First_Traversal {
         
         // set labels
         for (int i = 0; i < labels.length; i++) {
-            g.setLabel(i, labels[i]);
+            depthGraph.setLabel(i, labels[i]);
         }
 
         // create char to index map

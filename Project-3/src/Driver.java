@@ -60,12 +60,30 @@ public class Driver {
         System.out.print("Breadth-first traversal starting at A: ");
         printQueue(bfsOrder);  // expected order: A B D E G F H C I
 
-         /*Task 2: iterative depth-first traversal starting at A*/
+        /*Task 2: iterative depth-first traversal starting at A*/
         QueueInterface<Character> dfsOrder =
                 graph.getDepthFirstTraversal('A');
-
         System.out.print("Depth-first traversal starting at A: ");
         printQueue(dfsOrder);  // expected order: A E H I F C B
+         
+        System.out.print("\n"); // blank line between tasks
+
+        /*Task 3:  BFS Tree*/
+        DirectedGraph<Character> bfsTree =
+            graph.getBreadthFirstTree('A');
+        QueueInterface<Character> bfsTreeOrder =
+            bfsTree.getBreadthFirstTraversal('A');
+        System.out.print("Breadth-first TREE traversal starting at A: ");
+        printQueue(bfsTreeOrder);
+
+        /*Task 4: DFS Tree */
+        DirectedGraph<Character> dfsTree =
+            graph.getDepthFirstTree('A');
+        QueueInterface<Character> dfsTreeOrder =
+            dfsTree.getDepthFirstTraversal('A');
+        System.out.print("Depth-first TREE traversal starting at A: ");
+        printQueue(dfsTreeOrder);
+
     }
 
     /**
@@ -82,4 +100,3 @@ public class Driver {
         System.out.println();
     }
 }
-

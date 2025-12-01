@@ -146,37 +146,153 @@ public class DirectedGraph<T extends Comparable<? super T>>
      * Iterative depth-first traversal using the ADT stack.
      */
     @Override
-    public QueueInterface<T> getDepthFirstTraversal(T origin) {
-        resetVertices();
-        QueueInterface<T> traversalOrder = new LinkedQueue<>();
-        StackInterface<VertexInterface<T>> vertexStack = new LinkedStack<>();
+public QueueInterface<T> getDepthFirstTraversal(T origin) {
+    resetVertices();
+    QueueInterface<T> traversalOrder = new LinkedQueue<>();
+    StackInterface<VertexInterface<T>> vertexStack = new LinkedStack<>();
 
+    VertexInterface<T> originVertex = vertices.getValue(origin);
+    if (originVertex == null) {
+        return traversalOrder;
+    }
+
+    // Start by pushing origin (not visited yet)
+    vertexStack.push(originVertex);
+
+    while (!vertexStack.isEmpty()) {
+        VertexInterface<T> topVertex = vertexStack.pop();
+
+        if (!topVertex.isVisited()) {
+            // "Visit" when we pop
+            topVertex.visit();
+            traversalOrder.enqueue(topVertex.getLabel());
+
+            // Push neighbors in REVERSE order so that the first neighbor
+            // in the adjacency list is processed first (like recursion).
+            StackInterface<VertexInterface<T>> temp = new LinkedStack<>();
+            Iterator<VertexInterface<T>> neighbors =
+                    topVertex.getNeighborIterator();
+            while (neighbors.hasNext()) {
+                VertexInterface<T> nextNeighbor = neighbors.next();
+                if (!nextNeighbor.isVisited()) {
+                    temp.push(nextNeighbor);
+                }
+            }
+            while (!temp.isEmpty()) {
+                vertexStack.push(temp.pop());
+            }
+        }
+    }
+
+    return traversalOrder;
+}
+
+     /**
+     * Build the breadth-first search tree starting at the given origin.
+     * The tree is represented as a new DirectedGraph that contains all
+     * the same vertices as this graph, but only the tree edges discovered
+     * during BFS. Traversing the tree in BFS order yields the same order
+     * as getBreadthFirstTraversal on the original graph.
+     */
+    public DirectedGraph<T> getBreadthFirstTree(T origin) {
+        resetVertices();
+        DirectedGraph<T> tree = new DirectedGraph<>();
+
+        // Copy all vertex labels into the tree
+        Iterator<T> keyIterator = vertices.getKeyIterator();
+        while (keyIterator.hasNext()) {
+            tree.addVertex(keyIterator.next());
+        }
+
+        QueueInterface<VertexInterface<T>> vertexQueue = new LinkedQueue<>();
         VertexInterface<T> originVertex = vertices.getValue(origin);
         if (originVertex == null) {
-            return traversalOrder;
+            return tree;
         }
 
         originVertex.visit();
-        traversalOrder.enqueue(origin);
-        vertexStack.push(originVertex);
+        vertexQueue.enqueue(originVertex);
 
-        while (!vertexStack.isEmpty()) {
-            VertexInterface<T> topVertex = vertexStack.pop();
+        while (!vertexQueue.isEmpty()) {
+            VertexInterface<T> frontVertex = vertexQueue.dequeue();
             Iterator<VertexInterface<T>> neighbors =
-                    topVertex.getNeighborIterator();
+                    frontVertex.getNeighborIterator();
 
             while (neighbors.hasNext()) {
                 VertexInterface<T> nextNeighbor = neighbors.next();
                 if (!nextNeighbor.isVisited()) {
                     nextNeighbor.visit();
-                    traversalOrder.enqueue(nextNeighbor.getLabel());
-                    vertexStack.push(nextNeighbor);
+                    // Tree edge: parent -> child
+                    tree.addEdge(frontVertex.getLabel(), nextNeighbor.getLabel());
+                    vertexQueue.enqueue(nextNeighbor);
                 }
             }
         }
 
-        return traversalOrder;
+        return tree;
     }
+
+    /**
+     * Build the depth-first search tree starting at the given origin.
+     * The tree is represented as a new DirectedGraph that contains all
+     * the same vertices as this graph, but only the tree edges discovered
+     * during DFS. Traversing the tree in DFS order yields the same order
+     * as getDepthFirstTraversal on the original graph.
+     */
+    public DirectedGraph<T> getDepthFirstTree(T origin) {
+    resetVertices();
+    DirectedGraph<T> tree = new DirectedGraph<>();
+
+    // Copy all vertex labels into the tree
+    Iterator<T> keyIterator = vertices.getKeyIterator();
+    while (keyIterator.hasNext()) {
+        tree.addVertex(keyIterator.next());
+    }
+
+    StackInterface<VertexInterface<T>> vertexStack = new LinkedStack<>();
+    VertexInterface<T> originVertex = vertices.getValue(origin);
+    if (originVertex == null) {
+        return tree;
+    }
+
+    // Start with origin; no predecessor yet
+    originVertex.setPredecessor(null);
+    vertexStack.push(originVertex);
+
+    while (!vertexStack.isEmpty()) {
+        VertexInterface<T> topVertex = vertexStack.pop();
+
+        if (!topVertex.isVisited()) {
+            topVertex.visit();
+
+            // If this vertex has a predecessor, that's the tree edge
+            if (topVertex.hasPredecessor()) {
+                VertexInterface<T> parent = topVertex.getPredecessor();
+                tree.addEdge(parent.getLabel(), topVertex.getLabel());
+            }
+
+            // As in DFS above: push neighbors in reverse order,
+            // recording their predecessor (first time only).
+            StackInterface<VertexInterface<T>> temp = new LinkedStack<>();
+            Iterator<VertexInterface<T>> neighbors =
+                    topVertex.getNeighborIterator();
+            while (neighbors.hasNext()) {
+                VertexInterface<T> nextNeighbor = neighbors.next();
+                if (!nextNeighbor.isVisited()) {
+                    if (!nextNeighbor.hasPredecessor()) {
+                        nextNeighbor.setPredecessor(topVertex);
+                    }
+                    temp.push(nextNeighbor);
+                }
+            }
+            while (!temp.isEmpty()) {
+                vertexStack.push(temp.pop());
+            }
+        }
+    }
+
+    return tree;
+}
 
     /**
      * Unweighted shortest path (by number of edges) using BFS.

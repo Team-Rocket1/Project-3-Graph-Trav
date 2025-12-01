@@ -66,6 +66,10 @@ public class Depth_First_Traversal {
         }
     }
 
+    public static void addEdge(Graph<Character> depthGraph, Map<Character,Integer> indexOf, char source, char target) {
+        depthGraph.addEdge(indexOf.get(from), indexOf.get(to));
+    }
+
     public static void main(String[] args){
         Graph<Character> depthGraph = new Graph<>(9);
         char[] labels = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I' };
